@@ -4,5 +4,4 @@ dist/
 logs/
 yarn-error.log
 .npmrc
-infra/services/postgres/data/**
 infra/services/postgres/data/
