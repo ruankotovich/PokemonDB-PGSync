@@ -1,0 +1,15 @@
+{
+  "port": 8082,
+  "environment": "test",
+  "connection": {
+    "database": "pkm_db",
+    "username": "",
+    "password": "",
+    "dialect": "sqlite",
+    "storage": ":memory:",
+    "define": {
+      "underscored": true
+    },
+    "logging": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "port": 8080,
+  "environment": "default",
+  "connection": {
+    "database": "pkm_db",
+    "username": "postgres",
+    "password": "123456",
+    "dialect": "postgres",
+    "host": "postgres",
+    "params": {
+      "define": {
+        "underscored": true
+      },
+      "pool": {
+        "acquire": 30000,
+        "idle": 1000
+      },
+      "logging": false
+    }
+  }
+}

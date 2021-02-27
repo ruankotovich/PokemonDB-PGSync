@@ -1,0 +1,15 @@
+[
+  {
+    "database": "pkm_db",
+    "index": "pkm_db",
+    "nodes": [
+      {
+        "table": "Pokemons",
+        "columns": [
+          "name",
+          "code"
+        ]
+      }
+    ]
+  }
+]

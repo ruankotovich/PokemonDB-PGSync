@@ -1,0 +1,15 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "bail": true,
+  "verbose": true,
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/test/",
+    "/dist/",
+    "/config/environment.ts",
+    "/src/server.ts",
+    "/src/authorization/index.ts",
+    "/src/exceptions/"
+  ]
+}

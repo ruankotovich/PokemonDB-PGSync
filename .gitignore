@@ -1,0 +1,7 @@
+node_modules/
+.idea/
+dist/
+logs/
+yarn-error.log
+.npmrc
+infra/services/postgres/data/**
