@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  pkmmlz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash ./entrypoint.sh
+    ports:
+      - "8080:080"
+    networks:
+      - postgres_default
+      - pgsync_default
+
+networks:
+  postgres_default:
+    external: true
+  pgsync_default:
+    external: true

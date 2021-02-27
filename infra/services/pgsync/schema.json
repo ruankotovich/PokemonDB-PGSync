@@ -8,6 +8,17 @@
         "columns": [
           "name",
           "code"
+        ],
+        "children": [
+          {
+            "table": "Types",
+            "columns": ["name"],
+            "relationship": {
+              "through_tables": ["TypeOfPokemons"],
+              "type": "one_to_many",
+              "variant": "object"
+            }
+          }
         ]
       }
     ]

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  dryrun:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash ./dryrun.sh
+    networks:
+      - postgres_default
+
+networks:
+  postgres_default:
+    external: true

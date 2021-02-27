@@ -1,9 +1,0 @@
-version: '3.8'
-
-services:
-  pkmmlz:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:080"

@@ -3,8 +3,8 @@ ARG WORKDIR=/code
 RUN mkdir $WORKDIR
 WORKDIR $WORKDIR
 RUN pip install pgsync
-COPY ../../../scripts/wait-for-it.sh wait-for-it.sh
+COPY wait-for-it.sh wait-for-it.sh
 COPY entrypoint.sh entrypoint.sh
 COPY schema.json schema.json
 RUN chmod +x wait-for-it.sh
-RUN chmod +x runserver.sh
+RUN chmod +x entrypoint.sh

@@ -69,7 +69,7 @@ async function migratePokemons(): Promise<void> {
 
 (async (): Promise<void> => {
   switch (dialect) {
-    case 'storage':
+    case 'postgres':
       await dryRunPostgres();
       break;
     default:
