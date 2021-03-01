@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import log from '@flagcard/log';
+import log from './logger';
 import cors from 'cors';
 import { Sequelize } from 'sequelize-typescript';
 import * as Database from '../config/database';

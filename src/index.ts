@@ -1,7 +1,7 @@
 import os from 'os';
 import cluster from 'cluster';
 import config from 'config';
-import log from 'logger';
+import log from './logger';
 import environment, { isProduction } from '../config/environment';
 import Server from './server';
 import { name } from '../package.json';

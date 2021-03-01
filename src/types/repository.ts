@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
 import { Query } from 'express-serve-static-core';
-import { Page, Pageable, PageRequest } from '@flagcard/pagination';
 import { FindAndCountOptions, WhereAttributeHash } from 'sequelize/types/lib/model';
 import _ from 'lodash';
 import Sequelize, {
@@ -21,24 +20,6 @@ export default class Repository<T extends Sequelize.Model> {
   findAll(scope?: Scope, query?: Query): Promise<T[]> {
     const payload = _.omit(query, ['limit', 'page', 'offset', 'order', 'sort']) as WhereAttributeHash;
     return this.model.scope(scope).findAll({ transaction: this.transaction, where: payload });
-  }
-
-  async findPaged(query: Query, scope?: Scope): Promise<Page<T>> {
-    const pageable: Pageable = PageRequest.of(query);
-    const payload = _.omit(query, ['limit', 'page', 'offset', 'order', 'sort']) as unknown as T;
-
-    const options = {
-      ...pageable,
-      where: payload,
-      transaction: this.transaction,
-    } as unknown as FindAndCountOptions;
-
-    const response = await this.model.scope(scope).findAndCountAll(options);
-    return {
-      total: response.count,
-      page: pageable.page,
-      content: response.rows,
-    } as Page<T>;
   }
 
   findById(id: string, scope?: Scope): Promise<T| T[] | null> {

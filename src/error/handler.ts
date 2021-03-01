@@ -1,4 +1,4 @@
-import log from '@flagcard/log';
+import log from '../logger';
 import {
   BAD_REQUEST,
 } from 'http-status';

@@ -319,32 +319,6 @@
     pump "^3.0.0"
     secure-json-parse "^2.1.0"
 
-"@flagcard/exception@^2.0.7":
-  version "2.0.7"
-  resolved "https://npm.pkg.github.com/download/@flagcard/exception/2.0.7/4ea81a1fbfdffc551eebf2032b73c22dcccc41cc81318f1475fc7622ee630cb4#0289134adac1cdef7f6c116fe0d79be097f2aaf4"
-  integrity sha1-AokTStrBze9/bBFv4Neb4JfyqvQ=
-  dependencies:
-    "@flagcard/log" "^2.1.9"
-    express "^4.17.1"
-    http-status "^1.4.2"
-
-"@flagcard/log@^2.1.6", "@flagcard/log@^2.1.9":
-  version "2.1.9"
-  resolved "https://npm.pkg.github.com/download/@flagcard/log/2.1.9/79bc6d8f90eee121d2f28b2923d590d31fe3064e318dc11eceb5941c3ecba127#b449150da1a07117c4905321ba29f500da561384"
-  integrity sha1-tEkVDaGgcRfEkFMhuin1ANpWE4Q=
-  dependencies:
-    date-fns "^2.14.0"
-    date-fns-timezone "^0.1.4"
-    winston "^3.2.1"
-    winston-daily-rotate-file "^4.4.2"
-
-"@flagcard/pagination@^1.1.1":
-  version "1.1.1"
-  resolved "https://npm.pkg.github.com/download/@flagcard/pagination/1.1.1/a20bc3b6d5f3592020ae41a67ee1f6b3acf4bee9c485d244566bcadf25345dc2#58dc512cd2d331b534f48e31ffbcec0f77fa9795"
-  integrity sha1-WNxRLNLTMbU09I4x/7zsD3f6l5U=
-  dependencies:
-    express "^4.17.1"
-
 "@hapi/hoek@^9.0.0":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.1.1.tgz#9daf5745156fd84b8e9889a2dc721f0c58e894aa"
@@ -2585,13 +2559,6 @@ file-entry-cache@^5.0.1:
   dependencies:
     flat-cache "^2.0.1"
 
-file-stream-rotator@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/file-stream-rotator/-/file-stream-rotator-0.5.7.tgz#868a2e5966f7640a17dd86eda0e4467c089f6286"
-  integrity sha512-VYb3HZ/GiAGUCrfeakO8Mp54YGswNUHvL7P09WQcXAJNSj3iQ5QraYSp3cIn1MUyw6uzfgN/EFOarCNa4JvUHQ==
-  dependencies:
-    moment "^2.11.2"
-
 fill-range@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/fill-range/-/fill-range-4.0.0.tgz#d544811d428f98eb06a63dc402d2403c328c38f7"
@@ -3031,7 +2998,7 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-http-status@^1.4.2:
+http-status@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/http-status/-/http-status-1.5.0.tgz#2edfb02068d236ba60fd1481ad89219aa96e1677"
   integrity sha512-wcGvY31MpFNHIkUcXHHnvrE4IKYlpvitJw5P/1u892gMBAM46muQ+RH7UN1d+Ntnfx5apnOnVY6vcLmrWHOLwg==
@@ -4390,7 +4357,7 @@ moment-timezone@^0.5.21:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.11.2, moment@^2.24.0, moment@^2.29.0:
+"moment@>= 2.9.0", moment@^2.24.0, moment@^2.29.0:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
@@ -4654,11 +4621,6 @@ object-copy@^0.1.0:
     copy-descriptor "^0.1.0"
     define-property "^0.2.5"
     kind-of "^3.0.3"
-
-object-hash@^2.0.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-2.1.1.tgz#9447d0279b4fcf80cff3259bf66a1dc73afabe09"
-  integrity sha512-VOJmgmS+7wvXf8CjbQmimtCnEx3IAoLxI3fp2fbWehxrWBcAQFbk+vcwb6vzR0VZv/eNCJ/27j151ZTwqW/JeQ==
 
 object-inspect@^1.9.0:
   version "1.9.0"
@@ -6684,17 +6646,7 @@ wide-align@^1.1.0:
   dependencies:
     string-width "^1.0.2 || 2"
 
-winston-daily-rotate-file@^4.4.2:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/winston-daily-rotate-file/-/winston-daily-rotate-file-4.5.0.tgz#3914ac57c4bdae1138170bec85af0c2217b253b1"
-  integrity sha512-/HqeWiU48dzGqcrABRlxYWVMdL6l3uKCtFSJyrqK+E2rLnSFNsgYpvwx15EgTitBLNzH69lQd/+z2ASryV2aqw==
-  dependencies:
-    file-stream-rotator "^0.5.7"
-    object-hash "^2.0.1"
-    triple-beam "^1.3.0"
-    winston-transport "^4.2.0"
-
-winston-transport@^4.2.0, winston-transport@^4.4.0:
+winston-transport@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/winston-transport/-/winston-transport-4.4.0.tgz#17af518daa690d5b2ecccaa7acf7b20ca7925e59"
   integrity sha512-Lc7/p3GtqtqPBYYtS6KCN3c77/2QCev51DvcJKbkFPQNoj1sinkGwLGFDxkXY9J6p9+EPnYs+D90uwbnaiURTw==
@@ -6702,7 +6654,7 @@ winston-transport@^4.2.0, winston-transport@^4.4.0:
     readable-stream "^2.3.7"
     triple-beam "^1.2.0"
 
-winston@^3.2.1, winston@^3.3.3:
+winston@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/winston/-/winston-3.3.3.tgz#ae6172042cafb29786afa3d09c8ff833ab7c9170"
   integrity sha512-oEXTISQnC8VlSAKf1KYSSd7J6IWuRPQqDdo8eoRNaYKLvwSb5+79Z3Yi1lrl6KDpU6/VWaxpakDAtb1oQ4n9aw==
