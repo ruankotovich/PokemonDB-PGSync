@@ -12,7 +12,7 @@ import TypeOfPokemon from '../src/models/type.of.pokemon';
 
 const {
   dialect, database, username, password, host,
-} = config.get('connection');
+} = config.get('services.database.connection');
 
 async function dryRunPostgres(): Promise<void> {
   const connectionString = `postgres://${username}:${password}@${host}/postgres`;

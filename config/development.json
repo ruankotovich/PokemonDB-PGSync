@@ -1,21 +1,25 @@
 {
   "port": 8080,
   "environment": "default",
-  "connection": {
-    "database": "pkm_db",
-    "username": "postgres",
-    "password": "123456",
-    "dialect": "postgres",
-    "host": "localhost",
-    "params": {
-      "define": {
-        "underscored": true
-      },
-      "pool": {
-        "acquire": 30000,
-        "idle": 1000
-      },
-      "logging": false
+  "services": {
+    "database": {
+      "connection": {
+        "database": "pkm_db",
+        "username": "postgres",
+        "password": "123456",
+        "dialect": "postgres",
+        "host": "localhost",
+        "params": {
+          "define": {
+            "underscored": true
+          },
+          "pool": {
+            "acquire": 30000,
+            "idle": 1000
+          },
+          "logging": false
+        }
+      }
     }
   }
 }
