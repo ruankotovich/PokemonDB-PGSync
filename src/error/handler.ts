@@ -1,9 +1,9 @@
-import log from '../logger';
 import {
   BAD_REQUEST,
 } from 'http-status';
 import { Request, Response, NextFunction } from 'express';
 import { BaseError, ValidationErrorItem } from 'sequelize';
+import log from '../logger';
 
 interface Exception{
   status: number;
