@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
-import log from './logger';
 import cors from 'cors';
 import { Sequelize } from 'sequelize-typescript';
+import log from './logger';
 import * as Database from '../config/database';
 import api from './api';
 import { scopeMiddleware } from './types/middlewares';

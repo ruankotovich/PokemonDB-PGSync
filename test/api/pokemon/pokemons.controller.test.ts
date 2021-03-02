@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import http, { Sync } from '../../http';
 import Pokemon from '../../../src/models/pokemon';
 
-describe('Ncm Controller', () => {
+describe('Pokemon Controller', () => {
   // eslint-disable-next-line no-undef
   beforeAll(async () => {
     await Sync.default();

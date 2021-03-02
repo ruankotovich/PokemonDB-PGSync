@@ -1,11 +1,9 @@
-import CatchableException from '../../../error/catchable.exception';
+export type QueryPokemon = {name?: string; type?: string; from?: string; size?: string}
 
-export default function buildQuery(query: { name?: string; type?: string }) {
-  const { name, type: condensedTypes } = query;
-
-  if (!(name || condensedTypes)) {
-    throw new CatchableException('You must inform either "name" or "type"');
-  }
+export default function buildQuery(query: QueryPokemon) {
+  const {
+    name, type: condensedTypes, from, size,
+  } = query;
 
   let type: string | string[] | undefined;
 
@@ -27,7 +25,7 @@ export default function buildQuery(query: { name?: string; type?: string }) {
         must: [] as Array<object>,
       },
     },
-  };
+  } as {from?: string; size?: string; sort: Array<any>; query: any};
 
   if (name) {
     payload.query.bool.must.push({
@@ -39,6 +37,14 @@ export default function buildQuery(query: { name?: string; type?: string }) {
         fuzziness: 2,
       },
     });
+  }
+
+  if (from) {
+    payload.from = from;
+  }
+
+  if (size) {
+    payload.size = size;
   }
 
   if (type) {

@@ -6,7 +6,7 @@ import config from 'config';
 import PokemonRepository from '../pokemon.repository';
 import Pokemon from '../../../models/pokemon';
 import esClientSingleton from '../pokemon.es.client';
-import buildQuery from '../domain/pokemon.es.querybuilder';
+import buildQuery, { QueryPokemon } from '../domain/pokemon.es.querybuilder';
 import { PokemonEsResponseDto, toDTO } from '../domain/pokemon.es.response.dto';
 
 const esIndex = config.get('services.elasticsearch.index') as string;
@@ -22,7 +22,7 @@ export default class PokemonFind {
   }
 
   async findAll(query?: Query): Promise<PokemonEsResponseDto[]> {
-    const body = buildQuery(query as {name?: string; type?: string });
+    const body = buildQuery(query as QueryPokemon);
     const response = await this.esClient.search({
       index: esIndex,
       body,
