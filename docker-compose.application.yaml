@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     command: bash ./entrypoint.sh
     ports:
-      - "8080:080"
+      - "8080:8080"
     networks:
       - postgres_default
       - pgsync_default

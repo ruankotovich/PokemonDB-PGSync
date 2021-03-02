@@ -4,7 +4,7 @@
   "services": {
     "elasticsearch": {
       "host": "http://elasticsearch",
-      "port": 9201,
+      "port": 9200,
       "index": "pkm"
     },
     "database": {
