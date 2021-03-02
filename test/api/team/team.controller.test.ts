@@ -16,7 +16,6 @@ describe('Ncm Controller', () => {
 
   it('[GET /teams] should return status code ok (200)', async () => {
     const { status, body } = await http.get('/rest/teams');
-
     expect(status).toEqual(200);
     expect(body).toEqual([]);
   });

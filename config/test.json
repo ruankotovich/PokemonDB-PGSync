@@ -3,8 +3,8 @@
   "environment": "test",
   "services": {
     "elasticsearch": {
-      "host": "http://es",
-      "port": 9201,
+      "host": "http://localhost",
+      "port": 9999,
       "index": "pkm"
     },
     "database": {

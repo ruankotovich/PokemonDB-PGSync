@@ -1,7 +1,10 @@
 import { Client } from '@elastic/elasticsearch';
-import config from 'config';
+import iocConfiguration from '../ioc/es/es.ioc.context';
 
-const { host, port } = config.get('services.elasticsearch');
-const client = new Client({ node: `${host}:${port}` });
+function spawn(): Client {
+  const options = iocConfiguration();
+  const client = new Client(options);
+  return client;
+}
 
-export default client;
+export default spawn();
