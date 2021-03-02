@@ -2,6 +2,7 @@ import Joi from 'joi';
 import Team from '../../../models/team';
 
 export const schema = Joi.object({
+  id: Joi.string().uuid().optional(),
   pokemons: Joi.array().items(Joi.string().uuid()).min(1).max(6)
     .required(),
   name: Joi.string().min(5).required(),
