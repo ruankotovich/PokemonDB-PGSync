@@ -9,6 +9,7 @@ import Type from '../src/models/type';
 import { sequelize } from '../config/database';
 import Pokemon from '../src/models/pokemon';
 import TypeOfPokemon from '../src/models/type.of.pokemon';
+import CatchableException from '../src/error/catchable.exception';
 
 const {
   dialect, database, username, password, host,
@@ -73,7 +74,7 @@ async function migratePokemons(): Promise<void> {
       await dryRunPostgres();
       break;
     default:
-      throw new Error(`The dialect "${dialect}" currently is not supported`);
+      throw new CatchableException(`The dialect "${dialect}" currently is not supported`);
   }
   console.log('SYNC DATABASE MODELS');
   await Sync();

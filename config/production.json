@@ -2,6 +2,11 @@
   "port": 8080,
   "environment": "default",
   "services": {
+    "elasticsearch": {
+      "host": "http://elasticsearch",
+      "port": 9201,
+      "index": "pkm"
+    },
     "database": {
       "connection": {
         "database": "pkm_db",

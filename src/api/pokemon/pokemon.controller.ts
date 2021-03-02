@@ -5,7 +5,7 @@ export default class PokemonController {
   static async findAll(req: Request, res: Response, next: NextFunction): Promise<Response|void> {
     try {
       const pokemon = new PokemonFind();
-      const result = await pokemon.findAll();
+      const result = await pokemon.findAll(req.query);
       return res.json(result);
     } catch (err) {
       return next(err);

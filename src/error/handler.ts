@@ -4,6 +4,7 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { BaseError, ValidationErrorItem } from 'sequelize';
 import log from '../logger';
+import CatchableException from './catchable.exception';
 
 interface Exception{
   status: number;
@@ -19,6 +20,8 @@ const parseException = (err: Error): Exception => {
       message: sequelizeError.errors?.map((validationError) => `${validationError.type}: ${validationError.message}`) || sequelizeError.message,
       name: sequelizeError.name,
     };
+  } if (err instanceof CatchableException) {
+    return ({ status: err.status, message: err.message, name: err.name });
   }
   return ({ status: 500, message: err.message, name: 'Error' });
 };

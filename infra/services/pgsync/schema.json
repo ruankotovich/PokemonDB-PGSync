@@ -1,20 +1,33 @@
 [
   {
     "database": "pkm_db",
-    "index": "pkm_db",
+    "index": "pkm",
     "nodes": [
       {
         "table": "Pokemons",
         "columns": [
+          "id",
           "name",
           "code"
         ],
+        "transform": {
+          "mapping": {
+            "code": {
+              "type": "long"
+            }
+          }
+        },
         "children": [
           {
             "table": "Types",
-            "columns": ["name"],
+            "columns": [
+              "id",
+              "name"
+            ],
             "relationship": {
-              "through_tables": ["TypeOfPokemons"],
+              "through_tables": [
+                "TypeOfPokemons"
+              ],
               "type": "one_to_many",
               "variant": "object"
             }
