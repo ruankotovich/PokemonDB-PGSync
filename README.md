@@ -4,11 +4,18 @@
 
 ## Instalação/Deploy
 
-### 1 - Dry Run
+#### 1 - Dry Run
 
 Essa etapa é importantíssima, é a que povoa o banco de dados com os **schemas** e os **dados do arquivo json**. É possível utilizar a flag `-d` em qualquer etapa do docker-compose, mas para efeitos de visualização, talvez seja melhor não utilizar.
 
-#### 1.1 Deploy do Banco de Dados
+#### 1.1 Teste (Etapa opcional?)
+Essa etapa pode ser ignorada, mas recomendo fortemente, para fins de interfaceamento com o padrão de deploy dos casos de teste que podem ser executados por um CI/CD. Existem alguns testes focando nos endpoints da API. Um dos testes necessitou de um mock para o elasticsearch. É possível executar os testes com o seguinte comando:
+
+```
+docker-compose --file docker-compose.test.yaml up
+```
+
+#### 1.2 Deploy do Banco de Dados
 Essa arquitetura implementa o princípio de microsserviços, então o banco de dados, o serviço de sincronização e a aplicação do servidor foram separados.
 
 O serviço de banco de dados deve ser iniciado primeiro, uma vez que o serviço da aplicação irá povoá-lo (é possível iniciar a aplicação antes, nesse caso, eu utilizei o script comumente utilizado `wait-for-it.sh` para criar um tempo de espera pelo banco de dados).
@@ -20,7 +27,7 @@ cd infra/services/postgres
 docker-compose --env-file ../../default.env up
 ```
 
-#### 1.2 Migração dos dados JSON para o banco de dados
+#### 1.3 Migração dos dados JSON para o banco de dados
 
 Nessa etapa, preparei um composer para o dry-run, é possível iniciar executando o seguinte comando:
 
