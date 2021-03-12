@@ -1,228 +1,96 @@
-![](https://fontmeme.com/permalink/210301/8cb2b7084110cd0dec25f30e228b509c.png)
+# PkmDB - ElasticSearch synchronized with PostgresSQL
 
-# Méliuz - Backend Pleno
-
-## Instalação/Deploy
+## Installation / Deploy
 
 #### 1 - Dry Run
 
-Essa etapa é importantíssima, é a que povoa o banco de dados com os **schemas** e os **dados do arquivo json**. É possível utilizar a flag `-d` em qualquer etapa do docker-compose, mas para efeitos de visualização, talvez seja melhor não utilizar.
+This stage is very important, it is the one that populates the database with ** schemas ** and ** data from the json file **. It is possible to use the `-d` flag at any stage of the docker-compose, but for visualization purposes, it may be better not to use it.
 
-#### 1.1 Teste (Etapa opcional?)
-Essa etapa pode ser ignorada, mas recomendo fortemente, para fins de interfaceamento com o padrão de deploy dos casos de teste que podem ser executados por um CI/CD. Existem alguns testes focando nos endpoints da API. Um dos testes necessitou de um mock para o elasticsearch. É possível executar os testes com o seguinte comando:
+#### 1.1 Test (Optional step?)
+This step can be ignored, but I strongly recommend it, for purposes of interfacing with the deployment pattern of test cases that can be performed by a CI / CD. There are some tests focusing on API endpoints. One of the tests required a mock for elasticsearch. You can run the tests with the following command:
 
-```
+``
 docker-compose --file docker-compose.test.yaml up
-```
+``
 
-#### 1.2 Deploy do Banco de Dados
-Essa arquitetura implementa o princípio de microsserviços, então o banco de dados, o serviço de sincronização e a aplicação do servidor foram separados.
+#### 1.2 Database Deploy
+This architecture implements the microservice principle, so the database, the synchronization service and the server application were separated.
 
-O serviço de banco de dados deve ser iniciado primeiro, uma vez que o serviço da aplicação irá povoá-lo (é possível iniciar a aplicação antes, nesse caso, eu utilizei o script comumente utilizado `wait-for-it.sh` para criar um tempo de espera pelo banco de dados).
+The database service must be started first, since the application service will populate it (it is possible to start the application before, in this case, I used the commonly used `wait-for-it.sh` script to create waiting time for the database).
 
-Para isso, é necessário utilizar o composer do container informando o environment:
+For this, it is necessary to use the container composer informing the environment:
 
-```sh
-cd infra/services/postgres
+`` sh
+cd infra / services / postgres
 docker-compose --env-file ../../default.env up
-```
+``
 
-#### 1.3 Migração dos dados JSON para o banco de dados
+#### 1.3 Migration of JSON data to the database
 
-Nessa etapa, preparei um composer para o dry-run, é possível iniciar executando o seguinte comando:
+In this step, I prepared a composer for the dry-run, it is possible to start by executing the following command:
 
-```
+``
 docker-compose --file docker-compose.dryrun.yaml up
-```
+``
 
-Uma vez executado, o banco de dados está ativo e populado, e o serviço de dry-run terminou
+Once executed, the database is active and populated, and the dry-run service has ended
 
-![](.README_images/744ed6b7.png)
+! [] (. README_images / 744ed6b7.png)
 
 
 ### 2 - Deploy
 
-Na etapa de deploy, iniciamos o serviço de sincronização do banco de dados com o Elasticsearch
+In the deployment stage, we started the database synchronization service with Elasticsearch
 
-#### 2.1 Iniciar o serviço PGSync
+#### 2.1 Starting the PGSync service
 
-Nessa etapa, o serviço PGSync inicia consigo o Elasticsearch (para os índices de busca) e o Redis (para armazenar os shards da sincronização) e disponibiliza o serviço do Elasticsearch para a aplicação
+In this step, the PGSync service starts with Elasticsearch (for search indexes) and Redis (for storing synchronization shards) and makes the Elasticsearch service available to the application
 
-```sh
-cd infra/services/pgsync
+`` sh
+cd infra / services / pgsync
 docker-compose --env-file ../../default.env up
-```
+``
 
-Uma vez iniciada a sincronização, podemos consumir esses 2 serviços pela nossa API.
+Once synchronization has started, we can consume these 2 services through our API.
 
-#### 2.2 Iniciar API
+#### 2.2 Launch API
 
-Para iniciar a API, é possível executar o comando
+To start the API, you can run the command
 
-```
+``
 docker-compose --file docker-compose.application.yaml up
-```
+``
 
-Logo após isso, a API espera pelo Postgres e pelo Elasticsearch para iniciar (por 60 segundos), e em seguida fica disponível para consumo.
+Right after that, the API waits for Postgres and Elasticsearch to start (for 60 seconds), and then it is available for consumption.
 
+## Data Organization
 
-## Organização dos módulos
+### Migration of the JSON file
 
-### Código Fonte
+For the migration of the received JSON file, I decided to use the project structure itself to take advantage of the data entry models, so the `scripts / dry-run.ts` file basically reads the given JSON (located in` assets / pkm. json`), go through the file linearly, assembling a list of ** Pokemons ** and ** Types ** with their IDs generated by lib `uuid` (in this case it is necessary to generate them before to be able to insert the relationships of the pokemon with the types in the database), the input of all this data was carried out in a database transaction, to ensure that all relationships go unbroken for storage, or not.
 
-A aplicaçã foi desenvolvida com o princípio de que cada módulo possui vários **Usecases** (Pokemons podem ser PROCURADOS, Equipes podem ser SALVAS, PROCURADAS, DELETADAS e ALTERADAS), e cada um possui um repositório baseado no repositório genérico.
+### Database Diagram
 
-```
-src - Todo o código fonte da aplicação
-├── api - Módulo de API
-│   ├── index.ts
-│   ├── ioc - Subconjunto de Inversion of Control (utilizado no elasticsearch para mapear o ambiente de Mock)
-│   │   └── es
-│   │       ├── es.ioc.context.ts
-│   │       └── es.test.mock.ts
-│   ├── pokemon
-│   │   ├── domain
-│   │   │   ├── pokemon.es.querybuilder.ts
-│   │   │   ├── pokemon.es.response.dto.ts
-│   │   │   └── pokemon.input.dto.ts
-│   │   ├── index.ts
-│   │   ├── pokemon.controller.ts
-│   │   ├── pokemon.es.client.ts
-│   │   ├── pokemon.repository.ts
-│   │   └── usecases
-│   │       ├── pokemon.find.ts
-│   │       ├── pokemon.remove.ts
-│   │       ├── pokemon.save.ts
-│   │       └── pokemon.update.ts
-│   ├── pokemonOfTeam
-│   │   ├── pokemonOfTeam.repository.ts
-│   │   └── usecases
-│   │       ├── pokemonOfTeam.find.ts
-│   │       ├── pokemonOfTeam.remove.ts
-│   │       ├── pokemonOfTeam.save.ts
-│   │       └── pokemonOfTeam.update.ts
-│   ├── team
-│   │   ├── domain
-│   │   │   └── team.input.dto.ts
-│   │   ├── index.ts
-│   │   ├── team.controller.ts
-│   │   ├── team.repository.ts
-│   │   └── usecases
-│   │       ├── team.find.ts
-│   │       ├── team.remove.ts
-│   │       ├── team.save.ts
-│   │       └── team.update.ts
-│   ├── type
-│   │   ├── type.repository.ts
-│   │   └── usecases
-│   │       ├── type.find.ts
-│   │       ├── type.remove.ts
-│   │       ├── type.save.ts
-│   │       └── type.update.ts
-│   └── typeOfPokemon
-│       ├── typeOfPokemon.repository.ts
-│       └── usecases
-│           ├── typeOfPokemon.find.ts
-│           ├── typeOfPokemon.remove.ts
-│           ├── typeOfPokemon.save.ts
-│           └── typeOfPokemon.update.ts
-├── error - Erro Handler genérico
-│   ├── catchable.exception.ts
-│   └── handler.ts
-├── index.ts
-├── logger - Logger do sistema
-│   └── index.ts
-├── models - Entidades transacionais do banco de dados
-│   ├── pokemon.of.team.ts
-│   ├── pokemon.ts
-│   ├── team.ts
-│   ├── type.of.pokemon.ts
-│   └── type.ts
-├── server.ts
-└── types - Tipos auxiliares
-    ├── express.d.ts
-    ├── middlewares.ts
-    ├── model.actions.ts
-    └── repository.ts
-```
+I chose to use M: N relations to map the Pokémon with the types and with the Teams.
 
-### Infraestrutura
+! [] (. README_images / c846974d.png)
 
-A infraestrutura contempla os serviços de banco de dados e de sincronização e armazenamento no módulo de busca contemplado pelo Elasticsearch + Redis
-
-```
-infra
-├── default.env
-└── services
-    ├── pgsync
-    │   ├── docker-compose.yaml
-    │   ├── Dockerfile
-    │   ├── entrypoint.sh
-    │   ├── schema.json
-    │   └── wait-for-it.sh
-    └── postgres
-        ├── conf.sql
-        ├── data [error opening dir]
-        ├── docker-compose.yaml
-        └── Dockerfile
-```
-
-## Ferramentas Utilizadas
-
-### Toolkits
-- Elasticsearch  - para a busca por nome/tipo dos pokemons
-- PGSync - para sincronizar o banco de dados (PG) com o bundle de buscas (ES)
-- PosgtresSQL - para armazenar os dados estaticamente
-- Docker/Docker-Composer - para orquestrar e isolar o ambiente de implantação
-
-### Libraries/Linguagens
-- Typescript - para agilizar o desenvolvimento
-- Express - para expor os serviços
-- Joi - para validar a entrada de dados
-- Jest + Nock - para adicionar os casos de teste com mock no elasticsearch
-
-## Organização dos Dados
-
-
-### Migração do arquivo JSON
-
-Para a migração do arquivo JSON recebido, decidi utilizar a própria estrutura do projeto para aproveitar os modelos de entradas de dados, então, o arquivo `scripts/dry-run.ts` basicamente lê o JSON dado (localizado em `assets/pkm.json`), percorre o arquivo linearmente montando uma lista de **Pokemons** e **Tipos** com seus IDs gerados pela lib `uuid` (nesse caso é necessário gerar antes para poder inserir as relações dos pokemons com os tipos no banco de dados), o input de todos esses dados foi realizado em uma transação do banco de dados, para garantir que todas as relações vão íntegras para o armazenamento, ou não vão.
-
-### Diagrama do Banco de Dados
-
-Optei por utilizar relações M:N para mapear os Pokemons com os tipos e com as Equipes.
-
-![](.README_images/c846974d.png)
-
-A tabela **Types** armazena os tipos pertencentes aos pokemons, a tabela **Pokemons** armazena os pokemons propriamente ditos, a tabela **Teams** armazena as equipes. Já as tabelas **TypeOfPokemons** e **PokemonsOfTeams** armazenam os relacionamentos M:N entre as entidades relacionadas.
+The ** Types ** table stores the types belonging to the pokemons, the ** Pokemons ** table stores the pokemons themselves, the ** Teams ** table stores the teams. The ** TypeOfPokemons ** and ** PokemonsOfTeams ** tables store M: N relationships between related entities.
 
 ### Elasticsearch
 
-O elasticsearch serve muito bem nessa situação, onde um conjunto etático de dados deve ser mantido (no caso, em sincronia com o banco de dados original) e ao mesmo tempo expor uma interface eficiente de busca, nesse caso, o PGSYNC foi configurado para espelhar o esquema do banco de dados de maneira parcial, com alguns atributos das tabelas **Pokemons** e **Types**, o arquivo de configurações se encontra em `infra/services/pgsync/schema.json` e possui as informações de comportamentos das tabelas acima descritas.
+Elasticsearch serves very well in this situation, where an ethical data set must be maintained (in this case, in sync with the original database) and at the same time expose an efficient search interface, in this case, PGSYNC has been configured to mirror the database schema in a partial way, with some attributes of the tables ** Pokemons ** and ** Types **, the configuration file is found in `infra / services / pgsync / schema.json` and has the information of behaviors of the tables described above.
 
+## Usage
 
-## Utilização
+In the [documentation] file (./ Documentation.md) there are the routes available through the service.
 
-No arquivo de [documentação](./Documentation.md) existem as rotas disponíveis pelo serviço.
+Below is a short summary of them:
 
-Abaixo um pequeno resumo delas:
-
-- [GET] **/rest/pokemons** - É possível passar 4 parâmetros opcionais, **name**, para pesquisar pokemons pelo nome, com erro de até 2 caracteres providos pelo Elasticsearch; **type**, para pesquisar pokemons pelo tipo, também com até 2 erros de distância na string; size, para limitar o tamanho da janela de resultados; from, para caminhar pela janela de resultados.
-- [GET] **/rest/pokemons/:id** - Retorna um pokemon pelo ID
-- [GET] **/rest/teams** - Retorna a lista de todas as equipes cadastradas
-- [GET] **/rest/teams/:id** - Retorna uma equipe pelo ID
-- [POST] **/rest/teams** - Cadastra uma nova equipe, seguindo os requisitos necessários (de 1 a 6 pokemons, nome da equipe e do treinador com no mínimo 5 caracteres)
-- [PUT] **/rest/teams/:id** - Altera uma equipe pelo ID, é possível alterar tanto os pokemons quanto os dados da equipe por essa rota
-- [DELETE] **/rest/teams/:id** - Deleta uma equipe pelo ID
-
-## Todo
-
-- [x] Listar todos os Pokémon. Esta rota deve permitir filtros por nome e tipo;
-- [x] Gravação do time montado pelo usuário.
-- [x] Um time tem no máximo 6 Pokémon;
-- [x] O nome do time deve ter pelo menos 5 caracteres.
-- [x] Sua API deve retornar os dados no formato JSON;
-- [x] Sua solução deve ser desenvolvida em Python ou Javascript;
-- [x] Ela deve estar documentada da maneira como preferir. A qualidade da documentação também será avaliada;
-- [x] Sua solução deve considerar que será enviada para produção, então legibilidade e qualidade geral da solução será avaliada;
--[x] É sua escolha como e onde os dados fornecidos serão armazenados e retornados.
+- [GET] ** /rest/pokemons ** - It is possible to pass 4 optional parameters, ** name **, to search for pokemons by name, with an error of up to 2 characters provided by Elasticsearch; ** type **, to search for pokemons by type, also with up to 2 errors in the string; size, to limit the size of the results window; from, to walk through the results window.
+- [GET] ** /rest/pokemons/:id ** - Returns a pokemon by ID
+- [GET] ** /rest/teams ** - Returns the list of all registered teams
+- [GET] ** /rest/teams/:id ** - Returns a team by ID
+- [POST] ** /rest/teams ** - Register a new team, following the necessary requirements (from 1 to 6 pokemon, team name and trainer with at least 5 characters)
+- [PUT] ** /rest/teams/:id ** - Change a team by ID, it is possible to change both pokemon and team data by this route
+- [DELETE] ** /rest/teams/:id ** - Deletes a team by ID
